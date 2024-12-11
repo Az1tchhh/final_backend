@@ -55,3 +55,7 @@ class ProductCreateSerializer(serializers.ModelSerializer):
 
 class AddToCartSerializer(serializers.Serializer):
     quantity = serializers.DecimalField(max_digits=10, decimal_places=2, required=True)
+
+
+class AddToWishListSerializer(serializers.Serializer):
+    product_id = serializers.PrimaryKeyRelatedField(queryset=Product.objects.values_list('id', flat=True), required=True)

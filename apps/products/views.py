@@ -10,9 +10,11 @@ from rest_framework.viewsets import GenericViewSet
 from apps.carts.models import ShoppingCart
 from apps.products.models import Product, ProductCategory
 from apps.products.serializers import ProductSerializer, ProductCreateSerializer, ProductCategorySerializer, \
-    ProductCategoryCreateSerializer, AddToCartSerializer
+    ProductCategoryCreateSerializer, AddToCartSerializer, AddToWishListSerializer
 from apps.products.services import create_new_product, create_product_category, add_product_to_cart
 from apps.users.permissions import IsWebUser
+from apps.users.wish_lists.models import WishList, WishListItem
+from apps.users.wish_lists.services import create_wish_list_item
 from apps.utils.serializers import EmptySerializer
 from apps.utils.views import BaseViewSet
 
@@ -35,7 +37,8 @@ class ProductViewSet(BaseViewSet,
         'create': ProductCreateSerializer,
         'update': ProductCreateSerializer,
         'destroy': EmptySerializer,
-        'add_to_cart': AddToCartSerializer
+        'add_to_cart': AddToCartSerializer,
+        'add_to_wishlist': EmptySerializer
     }
     permission_classes = [IsWebUser]
     queryset = Product.objects.all()
@@ -60,6 +63,16 @@ class ProductViewSet(BaseViewSet,
         user = self.request.user
         product_id = self.kwargs['pk']
         add_product_to_cart(user, product_id, quantity)
+        return Response(data={'success': True}, status=status.HTTP_200_OK)
+
+    @action(methods=['POST'], detail=True, url_path='add-to-wishlist')
+    def add_to_wishlist(self, request, *args, **kwargs):
+        pk = self.kwargs['pk']
+        wish_list = WishList.objects.filter(user=self.request.user).first()
+        if wish_list is None:
+            wish_list = WishList.objects.create(user=self.request.user)
+
+        wish_list_item = create_wish_list_item(wish_list, pk)
         return Response(data={'success': True}, status=status.HTTP_200_OK)
 
 
