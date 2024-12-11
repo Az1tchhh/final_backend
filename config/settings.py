@@ -111,6 +111,22 @@ DATABASES = {
         'PASSWORD': env('db_password'),
         'HOST': env('db_host'),
         'PORT': env('db_port'),
+    },
+    'replica1': {
+        'ENGINE': "django.db.backends.postgresql",
+        'NAME': env('db_name2'),
+        'USER': env('db_user2'),
+        'PASSWORD': env('db_password2'),
+        'HOST': env('db_host2'),
+        'PORT': env('db_port2'),
+    },
+    'replica2': {
+        'ENGINE': "django.db.backends.postgresql",
+        'NAME': env('db_name3'),
+        'USER': env('db_user3'),
+        'PASSWORD': env('db_password3'),
+        'HOST': env('db_host3'),
+        'PORT': env('db_port3'),
     }
 }
 
@@ -175,7 +191,11 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PERMISSION_CLASSES': [],
     'DEFAULT_PAGINATION_CLASS': 'config.paginator.StandardResultsSetPagination',
-    'PAGE_SIZE': 20
+    'PAGE_SIZE': 20,
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/day',
+        'user': '1000/day'
+    }
 }
 
 CSRF_TRUSTED_ORIGINS = ['http://*', 'https://*']
