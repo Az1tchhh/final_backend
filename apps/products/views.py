@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from drf_yasg.utils import swagger_auto_schema
@@ -43,6 +44,34 @@ class ProductViewSet(BaseViewSet,
     }
     permission_classes = [IsWebUser]
     queryset = Product.objects.all()
+
+    def get_queryset(self):
+        cache_key = 'products_queryset_cache_key'
+        queryset = cache.get(cache_key)
+        if not queryset:
+            queryset = super().get_queryset()
+            cache.set(cache_key, queryset, timeout=1000)
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, *args, **kwargs):
+        cache_key = f'product_{self.kwargs['pk']}_cache_key'
+        instance = cache.get(cache_key)
+        if not instance:
+            instance = self.get_object()
+            cache.set(cache_key, instance, timeout=10)
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
     def perform_create(self, serializer):
         product = create_new_product(serializer.validated_data)
