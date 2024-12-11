@@ -16,3 +16,4 @@ class Product(AbstractModel, TimeStampMixin):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     stock_quantity = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, null=False)
+    avg_rating = models.DecimalField(max_digits=10, decimal_places=2, default=0)

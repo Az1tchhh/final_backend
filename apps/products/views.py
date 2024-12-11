@@ -10,7 +10,7 @@ from rest_framework.viewsets import GenericViewSet
 from apps.carts.models import ShoppingCart
 from apps.products.models import Product, ProductCategory
 from apps.products.serializers import ProductSerializer, ProductCreateSerializer, ProductCategorySerializer, \
-    ProductCategoryCreateSerializer, AddToCartSerializer, AddToWishListSerializer
+    ProductCategoryCreateSerializer, AddToCartSerializer, AddToWishListSerializer, ProductRetrieveSerializer
 from apps.products.services import create_new_product, create_product_category, add_product_to_cart
 from apps.users.permissions import IsWebUser
 from apps.users.wish_lists.models import WishList, WishListItem
@@ -36,6 +36,7 @@ class ProductViewSet(BaseViewSet,
     serializers = {
         'create': ProductCreateSerializer,
         'update': ProductCreateSerializer,
+        'retrieve': ProductRetrieveSerializer,
         'destroy': EmptySerializer,
         'add_to_cart': AddToCartSerializer,
         'add_to_wishlist': EmptySerializer
