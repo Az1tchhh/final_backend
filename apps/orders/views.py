@@ -43,7 +43,10 @@ class OrderViewSet(BaseViewSet,
     @action(methods=['GET'], detail=False, url_path='my')
     def my(self, request, *args, **kwargs):
         user = self.request.user
-        orders = Order.objects.filter(user=user)
+        orders = Order.objects.filter(user=user).prefetch_related(
+            'items',
+            'status_history'
+        )
 
         serializer = self.get_serializer(orders, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
