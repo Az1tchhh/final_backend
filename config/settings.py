@@ -118,22 +118,6 @@ DATABASES = {
         'PASSWORD': env('db_password'),
         'HOST': env('db_host'),
         'PORT': env('db_port'),
-    },
-    'replica1': {
-        'ENGINE': "django.db.backends.postgresql",
-        'NAME': env('db_name2'),
-        'USER': env('db_user2'),
-        'PASSWORD': env('db_password2'),
-        'HOST': env('db_host2'),
-        'PORT': env('db_port2'),
-    },
-    'replica2': {
-        'ENGINE': "django.db.backends.postgresql",
-        'NAME': env('db_name3'),
-        'USER': env('db_user3'),
-        'PASSWORD': env('db_password3'),
-        'HOST': env('db_host3'),
-        'PORT': env('db_port3'),
     }
 }
 
