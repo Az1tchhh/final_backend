@@ -38,7 +38,7 @@ class PaymentViewSet(BaseViewSet,
         if user.is_superuser:
             return queryset
 
-        queryset = queryset.filter(user=user)
+        queryset = queryset.filter(order__user=user)
         return queryset
 
     def perform_create(self, serializer):
