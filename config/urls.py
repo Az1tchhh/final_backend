@@ -46,6 +46,7 @@ urlpatterns = [
     path('payment/', include('apps.payments.urls')),
     path('product/', include('apps.products.urls')),
     path('review/', include('apps.reviews.urls')),
+    path('prometheus-xyzabc/', include('django_prometheus.urls')),
 ]
 
 if settings.DEBUG:

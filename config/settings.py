@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
+import socket
 from datetime import timedelta
 from pathlib import Path
 
@@ -33,7 +34,7 @@ DEBUG = True
 if env('DEBUG') == 'False':
     DEBUG = False
 
-ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 INSTALLED_APPS = [
@@ -49,6 +50,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'debug_toolbar',
     'drf_yasg',
+    'django_prometheus',
 
     'apps.carts.apps.CartsConfig',
     'apps.products.apps.ProductsConfig',
@@ -60,6 +62,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'django_prometheus.middleware.PrometheusBeforeMiddleware',
     'django.middleware.security.SecurityMiddleware',
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -70,6 +73,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'apps.utils.middlewares.ErrorHandlingMiddleware',
+    'django_prometheus.middleware.PrometheusAfterMiddleware'
 ]
 
 INTERNAL_IPS = [
@@ -78,6 +82,9 @@ INTERNAL_IPS = [
     "0.0.0.0",
     "*"
 ]
+
+ip = socket.gethostbyname(socket.gethostname())
+INTERNAL_IPS += [ip[:-1] + '1']
 
 ROOT_URLCONF = 'config.urls'
 
