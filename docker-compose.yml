@@ -44,7 +44,7 @@ services:
 #    depends_on:
 #      - web
 
-  db:
+  dbb:
     image: postgres:13-alpine
     restart: unless-stopped
     volumes:
